@@ -1,0 +1,66 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="choose-date">
+	<form method="POST" action="">
+		{% csrf_token %}
+		<h3>Choose date:</h3>
+		<input type="date" name="reservation date">
+		<button name="PrevDay" value="clicked">Previous day</button>
+		<button name="CurDay" value="clicked">Current day</button>
+		<button name="NextDay" value="clicked">Next day</button>
+		<br>
+		<button name="Ok" value="Ok">Apply</button>
+	</form>
+</div>
+<br>
+<h3><b>Table positions:</b></h3>
+<div class="choose-table">
+	<form method="POST" action="">
+		{% csrf_token %}
+		<div class="table-area">
+			{% for item in table_list %}
+				{% if item.reserved == False%}
+					{% if selected == True and item.number == id %}
+						{% if item.form == 'Round'%}
+							<button style="position: absolute; background-color: #F9E79F; width: {{ item.size_w }}%; height: {{ item.size_h }}%; left: {{item.coordinates_x}}%;top: {{item.coordinates_y}}%; border-radius: 40%;" name={{item.number}} value="clicked">Table {{item}}</button>
+						{% else %}
+							<button style="position: absolute; background-color: #F9E79F; width: {{ item.size_w }}%; height: {{ item.size_h }}%; left: {{item.coordinates_x}}%;top: {{item.coordinates_y}}%;" name={{item.number}} value="clicked">Table {{item}}</button>
+						{% endif%}
+				
+					{% else %}
+						{% if item.form == 'Round'%}
+							<button style="position: absolute; background-color: #ABEBC6; width: {{ item.size_w }}%; height: {{ item.size_h }}%; left: {{item.coordinates_x}}%;top: {{item.coordinates_y}}%; border-radius: 40%;" name={{item.number}} value="clicked">Table {{item}}</button>
+						{% else %}
+							<button style="position: absolute; background-color: #ABEBC6; width: {{ item.size_w }}%; height: {{ item.size_h }}%; left: {{item.coordinates_x}}%;top: {{item.coordinates_y}}%;" name={{item.number}} value="clicked">Table {{item}}</button>
+						{% endif%}
+					{% endif %}
+				{% else %}
+					{% if item.form == 'Round'%}
+							<button style="position: absolute; background-color: lightgray; width: {{ item.size_w }}%; height: {{ item.size_h }}%; left: {{item.coordinates_x}}%;top: {{item.coordinates_y}}%; border-radius: 40%;" name={{item.number}} value="clicked" disabled="disabled">Table {{item}} reserved</button>
+						{% else %}
+							<button style="position: absolute; background-color: lightgray; width: {{ item.size_w }}%; height: {{ item.size_h }}%; left: {{item.coordinates_x}}%;top: {{item.coordinates_y}}%;" name={{item.number}} value="clicked" disabled="disabled">Table {{item}} reserved</button>
+						{% endif%}
+				{% endif %}
+			{% endfor %}
+		</div>
+	</form>
+</div>
+<br>
+<div class="send-email">
+	{% if selected == True %}
+		<form method="post" action="">
+			{% csrf_token %}
+			<p> <b> Provide your contact information you to resrve a table:</b></p>
+			<br>
+			<label>Name: </label>
+			{{form.name}}
+			<label>Email: </label>
+			{{form.email}}
+			<br>
+			<button type="submit", name="reserve" value = "reserved">Reserve</button>	
+		</form>
+	{% endif %}		
+</div>
+
+{% endblock %}
